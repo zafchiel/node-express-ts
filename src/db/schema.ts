@@ -1,5 +1,5 @@
 import { InferModel } from "drizzle-orm"
-import { integer, pgTable, serial, varchar, real } from "drizzle-orm/pg-core"
+import { pgTable, serial, varchar, real } from "drizzle-orm/pg-core"
 
 export const products = pgTable("products", {
   id: serial("id").primaryKey(),

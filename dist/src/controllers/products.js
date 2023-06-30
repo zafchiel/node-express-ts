@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllProducts = void 0;
+exports.getProductByName = exports.getProductById = exports.getAllProducts = void 0;
 const db_1 = __importDefault(require("../db"));
 const schema_1 = require("../db/schema");
+const drizzle_orm_1 = require("drizzle-orm");
 const getAllProducts = (_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
     const productArray = yield db_1.default.select().from(schema_1.products);
     if (!productArray) {
@@ -23,3 +24,28 @@ const getAllProducts = (_req, _res) => __awaiter(void 0, void 0, void 0, functio
     _res.status(200).json(productArray);
 });
 exports.getAllProducts = getAllProducts;
+const getProductById = (_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = _req.params;
+    const product = yield db_1.default
+        .select()
+        .from(schema_1.products)
+        .where((0, drizzle_orm_1.sql) `${schema_1.products.id} = ${id}`)
+        .limit(1);
+    if (!product) {
+        throw new Error("Product not found");
+    }
+    _res.status(200).json(product);
+});
+exports.getProductById = getProductById;
+const getProductByName = (_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name } = _req.params;
+    const product = yield db_1.default
+        .select()
+        .from(schema_1.products)
+        .where((0, drizzle_orm_1.eq)(schema_1.products.name, name));
+    if (!product) {
+        throw new Error("Product not found");
+    }
+    _res.status(200).json(product);
+});
+exports.getProductByName = getProductByName;
