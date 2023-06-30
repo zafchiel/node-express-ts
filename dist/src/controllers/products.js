@@ -16,12 +16,13 @@ exports.createProduct = exports.getProductByName = exports.getProductById = expo
 const db_1 = __importDefault(require("../db"));
 const schema_1 = require("../db/schema");
 const drizzle_orm_1 = require("drizzle-orm");
+const http_status_codes_1 = require("http-status-codes");
 const getAllProducts = (_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
     const productArray = yield db_1.default.select().from(schema_1.products);
     if (!productArray) {
         throw new Error("No products found");
     }
-    _res.status(200).json(productArray);
+    _res.status(http_status_codes_1.StatusCodes.OK).json(productArray);
 });
 exports.getAllProducts = getAllProducts;
 const getProductById = (_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -34,7 +35,7 @@ const getProductById = (_req, _res) => __awaiter(void 0, void 0, void 0, functio
     if (!product) {
         throw new Error("Product not found");
     }
-    _res.status(200).json(product);
+    _res.status(http_status_codes_1.StatusCodes.OK).json(product);
 });
 exports.getProductById = getProductById;
 const getProductByName = (_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -46,7 +47,7 @@ const getProductByName = (_req, _res) => __awaiter(void 0, void 0, void 0, funct
     if (!product) {
         throw new Error("Product not found");
     }
-    _res.status(200).json(product);
+    _res.status(http_status_codes_1.StatusCodes.OK).json(product);
 });
 exports.getProductByName = getProductByName;
 const createProduct = (_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -63,6 +64,6 @@ const createProduct = (_req, _res) => __awaiter(void 0, void 0, void 0, function
     if (!product) {
         throw new Error("Product not found");
     }
-    _res.status(200).json(product);
+    _res.status(http_status_codes_1.StatusCodes.CREATED).json(product);
 });
 exports.createProduct = createProduct;

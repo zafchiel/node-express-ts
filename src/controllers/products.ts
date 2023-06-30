@@ -2,6 +2,7 @@ import { Response, Request } from "express"
 import db from "../db"
 import { products, Product } from "../db/schema"
 import { eq, sql } from "drizzle-orm"
+import { StatusCodes } from "http-status-codes"
 
 export const getAllProducts = async (_req: Request, _res: Response) => {
   const productArray: Product[] = await db.select().from(products)
@@ -10,7 +11,7 @@ export const getAllProducts = async (_req: Request, _res: Response) => {
     throw new Error("No products found")
   }
 
-  _res.status(200).json(productArray)
+  _res.status(StatusCodes.OK).json(productArray)
 }
 
 export const getProductById = async (_req: Request, _res: Response) => {
@@ -24,7 +25,7 @@ export const getProductById = async (_req: Request, _res: Response) => {
   if (!product) {
     throw new Error("Product not found")
   }
-  _res.status(200).json(product)
+  _res.status(StatusCodes.OK).json(product)
 }
 
 export const getProductByName = async (_req: Request, _res: Response) => {
@@ -37,7 +38,7 @@ export const getProductByName = async (_req: Request, _res: Response) => {
   if (!product) {
     throw new Error("Product not found")
   }
-  _res.status(200).json(product)
+  _res.status(StatusCodes.OK).json(product)
 }
 
 export const createProduct = async (_req: Request, _res: Response) => {
@@ -57,5 +58,5 @@ export const createProduct = async (_req: Request, _res: Response) => {
   if (!product) {
     throw new Error("Product not found")
   }
-  _res.status(200).json(product)
+  _res.status(StatusCodes.CREATED).json(product)
 }
