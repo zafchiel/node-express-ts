@@ -39,3 +39,23 @@ export const getProductByName = async (_req: Request, _res: Response) => {
   }
   _res.status(200).json(product)
 }
+
+export const createProduct = async (_req: Request, _res: Response) => {
+  if (!_req.body) {
+    throw new Error("Missing body")
+  }
+
+  if (!_req.body.name || !_req.body.price) {
+    throw new Error("Missing required fields")
+  }
+
+  const product: Product[] = await db
+    .insert(products)
+    .values(_req.body)
+    .returning()
+
+  if (!product) {
+    throw new Error("Product not found")
+  }
+  _res.status(200).json(product)
+}

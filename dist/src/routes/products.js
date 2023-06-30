@@ -10,3 +10,4 @@ exports.router = express_1.default.Router();
 exports.router.route("/").get(products_1.getAllProducts);
 exports.router.route("/:id").get(products_1.getProductById);
 exports.router.route("/name/:name").get(products_1.getProductByName);
+exports.router.route("/new").post(products_1.createProduct);
