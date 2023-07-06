@@ -1,17 +1,26 @@
-import { Response, Request } from "express"
+import { Response, Request, NextFunction } from "express"
 import db from "../db"
 import { products, Product } from "../db/schema"
 import { eq, sql } from "drizzle-orm"
 import { StatusCodes } from "http-status-codes"
+import { NotFoundError } from "../../errors"
 
-export const getAllProducts = async (_req: Request, _res: Response) => {
-  const productArray: Product[] = await db.select().from(products)
+export const getAllProducts = async (
+  _req: Request,
+  _res: Response,
+  next: NextFunction
+) => {
+  try {
+    const productArray: Product[] = await db.select().from(products)
 
-  if (!productArray) {
-    throw new Error("No products found")
+    if (!productArray) {
+      throw new NotFoundError("No products found")
+    }
+
+    _res.status(StatusCodes.OK).json(productArray)
+  } catch (error) {
+    next(error)
   }
-
-  _res.status(StatusCodes.OK).json(productArray)
 }
 
 export const getProductById = async (_req: Request, _res: Response) => {
@@ -23,7 +32,7 @@ export const getProductById = async (_req: Request, _res: Response) => {
     .limit(1)
 
   if (!product) {
-    throw new Error("Product not found")
+    throw new NotFoundError(`Product of id: ${id} not found`)
   }
   _res.status(StatusCodes.OK).json(product)
 }
@@ -36,7 +45,7 @@ export const getProductByName = async (_req: Request, _res: Response) => {
     .where(eq(products.name, name))
 
   if (!product) {
-    throw new Error("Product not found")
+    throw new NotFoundError(`Product of name: ${name} not found`)
   }
   _res.status(StatusCodes.OK).json(product)
 }
@@ -56,7 +65,7 @@ export const createProduct = async (_req: Request, _res: Response) => {
     .returning()
 
   if (!product) {
-    throw new Error("Product not found")
+    throw new Error("Could not create product")
   }
   _res.status(StatusCodes.CREATED).json(product)
 }
